@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Upload, FileText, Eye, Loader2, Trash2 } from 'lucide-react';
 
@@ -26,8 +26,26 @@ export default function ProjectPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<any>(null);
-  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [analysisData, setAnalysisData] = useState<{
+    body?: {
+      data?: {
+        client_info?: {
+          client_name?: string;
+          program_type?: string;
+          feature_type?: string;
+          match_score?: string;
+        };
+        analysis_results?: {
+          summary?: string;
+          citations?: Array<{
+            document_name: string;
+            extract: string;
+          }>;
+        };
+      };
+    };
+  } | null>(null);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, docId: string, docName: string}>({show: false, docId: '', docName: ''});
   const router = useRouter();
@@ -54,13 +72,7 @@ export default function ProjectPage() {
     { value: 'L01', label: 'L01 Light Exposure' }
   ];
 
-  useEffect(() => {
-    if (params.id) {
-      fetchProject();
-    }
-  }, [params.id]);
-
-  const fetchProject = async () => {
+  const fetchProject = useCallback(async () => {
     try {
       const response = await fetch('/api/projects');
       const projects = await response.json();
@@ -69,7 +81,13 @@ export default function ProjectPage() {
     } catch (error) {
       console.error('Failed to fetch project:', error);
     }
-  };
+  }, [params.id]);
+
+  useEffect(() => {
+    if (params.id) {
+      fetchProject();
+    }
+  }, [params.id, fetchProject]);
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -248,7 +266,7 @@ export default function ProjectPage() {
               )}
 
               <div className="space-y-4">
-                {project.documents.filter(doc => doc.id).map((doc, index) => (
+                {project.documents.filter(doc => doc.id).map((doc) => (
                   <div
                     key={doc.id}
                     className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
@@ -307,10 +325,10 @@ export default function ProjectPage() {
                       <div>
                         <h4 className="text-white font-medium mb-2">Citations</h4>
                         <div className="space-y-2">
-                          {analysisData.body.data.analysis_results.citations.map((citation: any, index: number) => (
-                            <div key={index} className="text-sm text-gray-300 bg-white/5 p-3 rounded-lg">
+                          {analysisData.body.data.analysis_results.citations.map((citation, index: number) => (
+                            <div key={`citation-${index}`} className="text-sm text-gray-300 bg-white/5 p-3 rounded-lg">
                               <p className="font-medium">{citation.document_name}</p>
-                              <p className="text-xs text-gray-400 mt-1">{citation.extract}</p>
+                              <p className="text-xs text-gray-400 mt-1">&ldquo;{citation.extract}&rdquo;</p>
                             </div>
                           ))}
                         </div>

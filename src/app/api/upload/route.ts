@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       const data = fs.readFileSync(projectsPath, 'utf8');
       const projects = JSON.parse(data);
       
-      const projectIndex = projects.findIndex((p: any) => p.id === projectId);
+      const projectIndex = projects.findIndex((p: { id: string }) => p.id === projectId);
       if (projectIndex !== -1) {
         const uploadId = result.uploadId || result.upload_id || Date.now().toString();
         const document = {
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
   }
 }

@@ -9,7 +9,7 @@ interface Project {
   name: string;
   description: string;
   status: string;
-  documents: any[];
+  documents: { id: string; name: string; [key: string]: unknown }[];
 }
 
 export default function DashboardPage() {

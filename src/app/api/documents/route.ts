@@ -17,16 +17,16 @@ export async function DELETE(request: NextRequest) {
     const data = fs.readFileSync(projectsPath, 'utf8');
     const projects = JSON.parse(data);
     
-    const projectIndex = projects.findIndex((p: any) => p.id === projectId);
+    const projectIndex = projects.findIndex((p: { id: string }) => p.id === projectId);
     if (projectIndex !== -1) {
       projects[projectIndex].documents = projects[projectIndex].documents.filter(
-        (doc: any) => doc.id !== documentId
+        (doc: { id: string }) => doc.id !== documentId
       );
       fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete document' }, { status: 500 });
   }
 }

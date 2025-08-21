@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     } else {
       return NextResponse.json({ error: 'Analysis failed' }, { status: 500 });
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Analysis failed' }, { status: 500 });
   }
 }
