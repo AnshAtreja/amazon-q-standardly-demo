@@ -1,0 +1,33 @@
+[
+  {
+    "id": "1",
+    "name": "Office Building Compliance",
+    "description": "WELL v2 certification for downtown office complex",
+    "status": "active",
+    "documents": [
+      {
+        "id": "8d87660f-522e-493b-bc92-52d683422eb0",
+        "name": "photo_6118187961649581576_y.jpg",
+        "clientName": "test",
+        "programType": "well_v2",
+        "featureType": "A01",
+        "uploadTime": "2025-08-18T13:10:43.113Z",
+        "size": "0.07MB"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Hospital Air Quality Assessment",
+    "description": "Air quality analysis for medical facility renovation",
+    "status": "completed",
+    "documents": []
+  },
+  {
+    "id": "3",
+    "name": "School Ventilation Project",
+    "description": "Ventilation system evaluation for elementary school",
+    "status": "pending",
+    "documents": []
+  }
+]
