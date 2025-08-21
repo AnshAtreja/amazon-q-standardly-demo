@@ -16,7 +16,11 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        {
+          error: 'Invalid credentials',
+          email: process.env.DEMO_EMAIL,
+          pass: process.env.DEMO_PASSWORD,
+        },
         { status: 401 }
       );
     }
@@ -25,14 +29,14 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       message: 'Login successful',
-      user: { id: user.id, email: user.email, name: user.name }
+      user: { id: user.id, email: user.email, name: user.name },
     });
 
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 86400 // 24 hours
+      maxAge: 86400, // 24 hours
     });
 
     return response;
