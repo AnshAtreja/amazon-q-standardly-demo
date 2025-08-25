@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-jwt-secret-key-for-production');
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
@@ -17,6 +17,7 @@ export async function verifyPassword(
 export async function createToken(
   payload: Record<string, unknown>
 ): Promise<string> {
+  console.log('Creating token with secret length:', secret.length);
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -34,13 +35,14 @@ export async function verifyToken(token: string) {
 }
 
 export async function authenticateUser(email: string, password: string) {
-  const demoEmail = process.env.DEMO_EMAIL || 'demo-prod@example.com';
-  const demoPassword = process.env.DEMO_PASSWORD || 'demo123';
+  const demoEmail = process.env.DEMO_EMAIL;
+  const demoPassword = process.env.DEMO_PASSWORD;
   const envDemoEmail = process.env.DEMO_EMAIL;
   const envDemoPassword = process.env.DEMO_PASSWORD;
 
   console.log('Env variables are : ', envDemoEmail, envDemoPassword);
 
+  console.log('Env variables are :', process.env.DEMO_EMAIL, process.env.DEMO_PASSWORD);
   console.log('Auth attempt:', { email, password, demoEmail, demoPassword });
 
   if (email === demoEmail && password === demoPassword) {
