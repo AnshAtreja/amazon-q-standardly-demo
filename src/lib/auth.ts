@@ -7,11 +7,16 @@ export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
 }
 
-export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hashedPassword: string
+): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword);
 }
 
-export async function createToken(payload: Record<string, unknown>): Promise<string> {
+export async function createToken(
+  payload: Record<string, unknown>
+): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -29,16 +34,18 @@ export async function verifyToken(token: string) {
 }
 
 export async function authenticateUser(email: string, password: string) {
-  const demoEmail = process.env.DEMO_EMAIL;
-  const demoPassword = process.env.DEMO_PASSWORD;
-  
+  const demoEmail = process.env.DEMO_EMAIL || 'demo-prod@example.com';
+  const demoPassword = process.env.DEMO_PASSWORD || 'demo123';
+
+  console.log('Auth attempt:', { email, password, demoEmail, demoPassword });
+
   if (email === demoEmail && password === demoPassword) {
     return {
       id: '1',
       email: demoEmail,
-      name: 'Demo User'
+      name: 'Demo User',
     };
   }
-  
+
   return null;
 }

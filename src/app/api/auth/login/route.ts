@@ -18,8 +18,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Invalid credentials',
-          email: process.env.DEMO_EMAIL,
-          pass: process.env.DEMO_PASSWORD,
+          debug: {
+            envEmail: process.env.DEMO_EMAIL,
+            envPass: process.env.DEMO_PASSWORD,
+            receivedEmail: email,
+            receivedPass: password
+          }
         },
         { status: 401 }
       );
