@@ -36,6 +36,10 @@ export async function verifyToken(token: string) {
 export async function authenticateUser(email: string, password: string) {
   const demoEmail = process.env.DEMO_EMAIL || 'demo-prod@example.com';
   const demoPassword = process.env.DEMO_PASSWORD || 'demo123';
+  const envDemoEmail = process.env.DEMO_EMAIL;
+  const envDemoPassword = process.env.DEMO_PASSWORD;
+
+  console.log('Env variables are : ', envDemoEmail, envDemoPassword);
 
   console.log('Auth attempt:', { email, password, demoEmail, demoPassword });
 
